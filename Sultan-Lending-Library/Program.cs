@@ -13,11 +13,9 @@ namespace Sultan_Lending_Library
 
         public static void Main(string[] args)
         {
-            //makes new library and bookbag instances
             Library = new Library<Book>();
             BookBag = new List<Book>();
-            //calls a method to load library with books
-            //calls method for user interface
+          
             PhilOurLibrary();
             UserInterFace();
         }
@@ -28,6 +26,7 @@ namespace Sultan_Lending_Library
             while (userChoice != 6)
             {
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("What would you like to do?");
                 Console.WriteLine("1. View All Books");
                 Console.WriteLine("2. Add a Book");
@@ -60,15 +59,15 @@ namespace Sultan_Lending_Library
                         ViewBookBag();
                         break;
                     default:
+                        Console.Beep();
+                        Console.WriteLine("Invaled number Plz Enter Wrigh Number");
                         break;
                 }
 
 
             }
         }
-        /// <summary>
-        /// The below method will show all books in the library that are available.
-        /// </summary>
+    
         public static void ViewLibrary()
         {
             Console.WriteLine("Here are the books in the library: \n");
@@ -154,11 +153,9 @@ namespace Sultan_Lending_Library
 
         static void ReturnBook()
         {
-            //instantiates a new Dictionary collection with keys that are integers and values that are book instances.
             Dictionary<int, Book> books = new Dictionary<int, Book>();
             Console.WriteLine("Which book would you like to return");
             int counter = 1;
-            // this goes over each item in the BookBag Dictionary feeding in the counter as the keys, and items as values. 
             foreach (var item in BookBag)
             {
                 books.Add(counter, item);
@@ -167,13 +164,9 @@ namespace Sultan_Lending_Library
             }
 
             string response = Console.ReadLine();
-            //below parses the incomming string into an integer
             int.TryParse(response, out int selection);
-            //This line gets the value that corresponds to the number key the user inputs from the dictionary.
             books.TryGetValue(selection, out Book returnedBook);
-            //removes book from bookbag dictionary
             BookBag.Remove(returnedBook);
-            //adds book to library collection
             Library.Add(returnedBook);
         }
 
