@@ -11,14 +11,13 @@ namespace Sultan_Lending_Library
 
         public int NumberOfPages { get; set; }
 
-        public Genre Genre { get; set; }
 
         
         public Book()
         {
 
         }
-        public Book(string title, string firstName, string lastName, int numberOfPages, Genre genre)
+        public Book(string title, string firstName, string lastName, int numberOfPages)
         {
             {
                 Title = title;
@@ -28,17 +27,9 @@ namespace Sultan_Lending_Library
                     LastName = lastName
                 };
                 NumberOfPages = numberOfPages;
-                Genre = genre;
             }
         }
 
     }
-    public enum Genre
-    {
-        SciFi = 1,
-        Mystery,
-        Fantasy,
-        Romance,
-        NonFiction
-    }
+    
 }

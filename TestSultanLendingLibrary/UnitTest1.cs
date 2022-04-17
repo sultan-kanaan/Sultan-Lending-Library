@@ -11,37 +11,26 @@ namespace TestSultanLendingLibrary
             public void Add_Book_To_Library_That_Exists()
             {
                 Library<Book> Library = new Library<Book>();
-                Book bookThatExists = new Book("The Lord of the Rings: Trilogy", "J.R.R.", "Tolkien", 1007, Genre.Fantasy);
-                Library.Add(bookThatExists);
+                Library.Add("The Lord of the Rings", "J.R.R.", "Tolkien", 100);
                 int expected = 1;
-                Assert.Equal(expected, Library.Count());
+                Assert.Equal(expected, Library.Count);
+        }
+
+            [Fact]
+            public void TestBorrowing()
+            {
+            Library<Book> library = new Library<Book>();
+            Book expected = new Book("The Lord of the Rings", "J.R.R.", "Tolkien", 100);
+            library.Return(expected);
+            Assert.Contains(expected, library);
             }
 
             [Fact]
-            public void Remove_Book_From_Library()
+            public void TestUnpackBackpack()
             {
-                Library<Book> Library = new Library<Book>();
-                Book book1 = new Book("The Lord of the Rings: Trilogy", "J.R.R.", "Tolkien", 1007, Genre.Fantasy);
-                Book book2 = new Book("The Lord of the Rings: Trilogy", "J.R.R.", "Tolkien", 1007, Genre.Fantasy);
-                Library.Add(book1);
-                Library.Add(book2);
-                Book removed = Library.Remove(book2);
-
-                Assert.Equal(book2, removed);
-            }
-
-            [Fact]
-            public void Cant_Remove_Book_From_Library_That_Doesnt_Exist()
-            {
-                Library<Book> Library = new Library<Book>();
-                Book book1 = new Book("The Lord of the Rings: Trilogy", "J.R.R.", "Tolkien", 1007, Genre.Fantasy);
-                Book book2 = new Book("The Lord of the Rings: Trilogy", "J.R.R.", "Tolkien", 1007, Genre.Fantasy);
-                Library.Add(book1);
-                Library.Add(book1);
-                Library.Add(book1);
-                Book removed = Library.Remove(book2);
-                Assert.Equal(default(Book), removed);
-               
+            Backpack<Book> backpack = new Backpack<Book>();
+            Book expected = new Book("The Lord of the Rings", "J.R.R.", "Tolkien", 100);
+            Assert.DoesNotContain(expected, backpack);
             }
     }
 }

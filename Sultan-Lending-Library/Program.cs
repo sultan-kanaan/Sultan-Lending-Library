@@ -8,13 +8,12 @@ namespace Sultan_Lending_Library
 {
     class Program
     {
-        public static Library<Book> Library { get; set; }
-        public static List<Book> BookBag { get; set; }
+        public static Library<Book> library = new Library<Book>();
+        public static Backpack<Book> backpack = new Backpack<Book>();
+
 
         public static void Main(string[] args)
         {
-            Library = new Library<Book>();
-            BookBag = new List<Book>();
           
             PhilOurLibrary();
             UserInterFace();
@@ -60,7 +59,7 @@ namespace Sultan_Lending_Library
                         break;
                     default:
                         Console.Beep();
-                        Console.WriteLine("Invaled number Plz Enter Wrigh Number");
+                        Console.WriteLine("Invaled number Plz Enter right number");
                         break;
                 }
 
@@ -72,11 +71,11 @@ namespace Sultan_Lending_Library
         {
             Console.WriteLine("Here are the books in the library: \n");
 
-            foreach (Book book in Library)
+            foreach (Book book in library)
             {
                 if (book != null)
                 {
-                    Console.WriteLine($"{book.Title} by {book.Author.FirstName} {book.Author.LastName}, with {book.NumberOfPages} pages in the genre: {book.Genre}");
+                    Console.WriteLine($"{book.Title} by {book.Author.FirstName} {book.Author.LastName}, with {book.NumberOfPages} pages ");
                 }
             }
         }
@@ -84,11 +83,11 @@ namespace Sultan_Lending_Library
         public static void ViewBookBag()
         {
             Console.WriteLine("Here are the books in your book bag:");
-            foreach (Book book in BookBag)
+            foreach (Book book in backpack)
             {
                 if (book != null)
                 {
-                    Console.WriteLine($"{book.Title} by {book.Author.FirstName} {book.Author.LastName}, with {book.NumberOfPages} pages in the genre: {book.Genre}");
+                    Console.WriteLine($"{book.Title} by {book.Author.FirstName} {book.Author.LastName}, with {book.NumberOfPages} pages ");
                 }
             }
         }
@@ -103,93 +102,55 @@ namespace Sultan_Lending_Library
             string thisLastName = Console.ReadLine();
             Console.WriteLine("Please enter the number of pages in the book");
             int thisPageNumber = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Please choose a number corresponding to a genre out of this list:");
-
-            foreach (string genre in Enum.GetNames(typeof(Genre)))
-            {
-                Console.WriteLine($"{genre.GetHashCode()}. {genre}");
-            }
-
-            string genreString = Console.ReadLine();
-            int genreInt = Convert.ToInt32(genreString);
-            Genre genreChoice = (Genre)genreInt;
-
-            Book thisBook = new Book(thisTitle, thisFirstName, thisLastName, thisPageNumber, genreChoice);
-            Library.Add(thisBook);
+            
+            library.Add(thisTitle, thisFirstName, thisLastName, thisPageNumber);
             Console.WriteLine("Successfully added your book to the library");
         }
 
-        public static Book BorrowABook()
+        public static void BorrowABook()
         {
-            Book borrowedBook = default(Book);
-            int indexForNumberedList = 1;
+            int count = 1;
+            foreach (Book book in library)
+            {
+                Console.WriteLine($" {count++}. {book.Title} BY {book.Author.FirstName} {book.Author.LastName}");
+            }
+            Console.WriteLine();
             Console.WriteLine("Which book would you like to borrow?");
-
-            foreach (Book book in Library)
-            {
-                Console.WriteLine($"{indexForNumberedList}. {book.Title}");
-                indexForNumberedList++;
-            }
-
             string userChoice = Console.ReadLine();
-
-
-            foreach (Book book in Library)
+            if (userChoice == null)
             {
-                if (userChoice == null)
-                {
-                    Console.WriteLine("Sorry that book is not available, try again!");
-                }
-                else if (userChoice == book.Title)
-                {
-                    BookBag.Add(Library.Remove(book));
-                    borrowedBook = book;
-                    Console.WriteLine($"{borrowedBook.Title} was added to your book bag!");
-                }
+                Console.WriteLine("Sorry that book is not available, try again!");
+            }
+            else
+            {
+            Book Borrowed = library.Borrow(userChoice);
+            backpack.Pack(Borrowed);
 
             }
-            return borrowedBook;
         }
 
         static void ReturnBook()
         {
-            Dictionary<int, Book> books = new Dictionary<int, Book>();
-            Console.WriteLine("Which book would you like to return");
             int counter = 1;
-            foreach (var item in BookBag)
+            foreach (Book item in backpack)
             {
-                books.Add(counter, item);
-                Console.WriteLine($"{counter++}. {item.Title} - {item.Author.FirstName} {item.Author.LastName}");
-
+                Console.WriteLine($"{counter++}. {item.Title}");
             }
-
-            string response = Console.ReadLine();
-            int.TryParse(response, out int selection);
-            books.TryGetValue(selection, out Book returnedBook);
-            BookBag.Remove(returnedBook);
-            Library.Add(returnedBook);
+            Console.WriteLine();
+            Console.WriteLine("Which book would you like to return");
+            int response = Convert.ToInt32(Console.ReadLine());
+            Book Returned = backpack.Unpack(response - 1);
+            library.Return(Returned);
         }
 
         public static void PhilOurLibrary()
         {
-            Library.Add(new Book("The Lord of the Rings: Trilogy", "J.R.R.", "Tolkien", 1007, Genre.Fantasy));
-            Library.Add(new Book("Carrie", "Steven", "King", 199, Genre.Mystery));
-            Library.Add(new Book("The Left Hand Of Darkness", "Ursula K.", "LeGuin", 286, Genre.SciFi));
-            Library.Add(new Book("Fifty Shades of Grey", "E.L.", "James", 514, Genre.Romance));
-            Library.Add(new Book("Experience the Joy of Painting", "Bob", "Ross", 68, Genre.NonFiction));
-            Book johnsBook = new Book()
-            {
-                Title = "john is bald",
-                Author = new Author()
-                {
-                    FirstName = "John",
-                    LastName = "Cokos",
-
-                },
-                NumberOfPages = 200,
-                Genre = Genre.Mystery
-            };
-            Library.Add(johnsBook);
+            library.Add("The Lord of the Rings", "J.R.R.", "Tolkien", 1007);
+            library.Add("Carrie", "Steven", "King", 199);
+            library.Add("The Left Hand Of Darkness", "Ursula K.", "LeGuin", 286);
+            library.Add("Fifty Shades of Grey", "E.L.", "James", 514);
+            library.Add("Experience the Joy of Painting", "Bob", "Ross", 68);
+            
         }
 
 
