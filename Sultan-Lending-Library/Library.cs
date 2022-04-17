@@ -7,73 +7,48 @@ using System.Threading.Tasks;
 
 namespace Sultan_Lending_Library
 {
-    public class Library<Book> : IEnumerable
+    public class Library<T> : ILibrary
     {
-        public static Book[] library = new Book[5];
-        public static int count;
-        
-        public void Add(Book book)
+        private Dictionary<string, Book> Dictionary = new Dictionary<string, Book>();
+
+        public int Count { set; get; }
+
+        public void Add(string title, string firstName, string lastName, int numberOfPages)
         {
-          if (count == library.Length)
-          {
-            Array.Resize(ref library, library.Length * 2);
-          }
-            library[count++] = book;
+            Dictionary.Add(title, new Book(title, firstName, lastName, numberOfPages));
+            Count++;
         }
-        public Book Remove(Book book)
+        public Book Borrow(string title)
         {
-            int temporaryCounter = 0;
-            Book[] temp;
-            Book removed = default(Book);
-            if (count < library.Length / 2)
+            if (Dictionary.ContainsKey(title))
             {
-                temp = new Book[count - 1];
+                Book book = Dictionary[title];
+                Dictionary.Remove(title);
+                Count--;
+                return book;
             }
             else
             {
-                temp = new Book[library.Length];
+                return null;
             }
 
-            for (int i = 0; i < count; i++)
-            {
-                if (library[i] != null)
-                {
-                    if (library[i].Equals(book))
-                    {
-                        removed = library[i];
-                    }
-                    else
-                    {
-                        temp[temporaryCounter] = library[i];
-                        temporaryCounter++;
-                    }
-                }
-            }  
-            library = temp;
-            count--;
-
-            return removed;
         }
-        
-        public int Count()
+        public void Return(Book book)
         {
-            return count;
+            Dictionary.Add(book.Title, book);
+            Count++;
         }
-       
 
         public IEnumerator<Book> GetEnumerator()
         {
-            for (int i = 0; i < count; i++)
-            {
-                yield return library[i];
-            }
+            foreach (Book book in Dictionary.Values)
+                yield return book;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
-
     }
 }
 
