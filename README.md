@@ -6,24 +6,24 @@ using this library you can borrow books put it in the bag and add new books.
 
 ## Start Menu
 
-![image](./images/v1.png)
+![image](./images/1.png)
 
 ## View All Books
 
-![](./images/1.png)
+![](./images/2.png)
 
 ## Add a Book
 
-![](./images/2.png)
+![](./images/5.png)
 
 
 ## Borrow a Book
 
-![](./images/3.png)
+![](./images/6.png)
 
 
 # tests :
 
-![image](./images/Tests.png)
+![image](./images/Test.png)
 
 
